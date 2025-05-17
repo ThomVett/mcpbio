@@ -67,7 +67,13 @@ go_terms = Tool(
    ]
 )
 
-drug_bank = Tool(
+class DrugBankTool(Tool):
+    def tool_call(self, inputs: None):
+        return input
+
+
+
+drug_bank = DrugBankTool(
     name="DrugBank",
     description="DrugBank provides information on drug molecules, including approved and investigational compounds, their targets, mechanisms of action, and clinical indications.",
     use_cases=["Identify drugs that target a specific gene or protein", "Check if a gene is a known drug target", "Look up drugs in development or approved for a disease"],
