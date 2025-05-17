@@ -26,10 +26,12 @@ class Tool(BaseModel):
     )
 
     depends_on: str = Field(
+        default=None,
         description="If the tool depends on another tool - specify the tool name here."
     )
 
     output: Any = Field(
+        default=None,
         description="attribute to store the outputs of the previous step"
     )
 
