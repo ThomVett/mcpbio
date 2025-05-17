@@ -5,6 +5,8 @@ build/
 dist/
 wheels/
 *.egg-info
+/mcp_agent/keys.py
+.idea
 
 # Virtual environments
 .venv
