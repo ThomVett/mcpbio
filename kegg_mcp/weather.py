@@ -156,7 +156,21 @@ async def go_functional_similarity(gene_name: str) -> List[str]:
 
     return go.find_similar_genes(gene_name)
 
+
+
+@mcp.tool()
+async def get_proteins_that_are_in_too_lists(protein_list_1: List[str], protein_list_2: List[str]) -> List[str]:
+    """Based on the two input protein lists returns the proteis that are present in the two protein lists"""
+
+    # Convert both lists to sets for faster lookup and remove duplicates
+    set1 = {protein.strip().lower() for protein in protein_list_1}
+    set2 = {protein.strip().lower() for protein in protein_list_2}
     
+    # Find the intersection of the two sets to get proteins present in both lists
+    common_proteins = set1.intersection(set2)
+    
+    # Convert the set back to a list and return it
+    return list(common_proteins)
 
 if __name__ == "__main__":
     mcp.run(transport='stdio')
