@@ -1,13 +1,19 @@
 import streamlit as st
 import json
-from plan import generate_bio_plan, explain_personalized_steps  # Replace with actual filename
+from plan import (
+    generate_bio_plan,
+    explain_personalized_steps,
+)  # Replace with actual filename
 
 st.set_page_config(page_title="BioAPI Planner", layout="wide")
 
 st.title("🧬 Biomedical API Planner UI")
 
 # Input from user
-user_query = st.text_input("🔍 Enter your biomedical query", placeholder="e.g., Can the KRAS G12D mutation be targeted with any known inhibitors?")
+user_query = st.text_input(
+    "🔍 Enter your biomedical query",
+    placeholder="e.g., Can the KRAS G12D mutation be targeted with any known inhibitors?",
+)
 
 if st.button("Generate Plan") and user_query:
     with st.spinner("Generating API plan..."):

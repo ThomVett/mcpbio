@@ -131,7 +131,7 @@ async def kegg_pathway_proteins(pathway_name: str, organism: str = "hsa") -> str
         if "name" in protein:
             protein_lines.append(f"{protein['id']}: {protein['name']}")
         else:
-            protein_lines.append(protein['id'])
+            protein_lines.append(protein["id"])
 
     result += "\n".join(protein_lines)
 
@@ -139,4 +139,4 @@ async def kegg_pathway_proteins(pathway_name: str, organism: str = "hsa") -> str
 
 
 if __name__ == "__main__":
-    mcp.run(transport='stdio')
+    mcp.run(transport="stdio")

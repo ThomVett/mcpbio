@@ -5,7 +5,9 @@ import httpx
 KEGG_API_BASE = "https://rest.kegg.jp"
 
 
-async def get_pathway_id(pathway_name: str, organism: str = "hsa") -> Tuple[Optional[str], Optional[str]]:
+async def get_pathway_id(
+    pathway_name: str, organism: str = "hsa"
+) -> Tuple[Optional[str], Optional[str]]:
     """Get KEGG pathway ID from a pathway name.
 
     Args:
@@ -27,9 +29,9 @@ async def get_pathway_id(pathway_name: str, organism: str = "hsa") -> Tuple[Opti
             # Parse response to find pathway ID matching the name
             pathway_name_lower = pathway_name.lower()
 
-            for line in response.text.strip().split('\n'):
+            for line in response.text.strip().split("\n"):
                 if line and pathway_name_lower in line.lower():
-                    parts = line.split('\t')
+                    parts = line.split("\t")
                     if len(parts) >= 2:
                         pathway_id = parts[0].strip()
                         pathway_desc = parts[1].strip()
@@ -42,7 +44,9 @@ async def get_pathway_id(pathway_name: str, organism: str = "hsa") -> Tuple[Opti
             return None, None
 
 
-async def get_pathway_proteins(pathway_id: str, organism: str = "hsa") -> List[Dict[str, str]]:
+async def get_pathway_proteins(
+    pathway_id: str, organism: str = "hsa"
+) -> List[Dict[str, str]]:
     """Get proteins in a biological pathway from KEGG.
 
     Args:
@@ -61,9 +65,9 @@ async def get_pathway_proteins(pathway_id: str, organism: str = "hsa") -> List[D
 
             # Parse genes
             genes = []
-            for line in response.text.strip().split('\n'):
+            for line in response.text.strip().split("\n"):
                 if line:
-                    parts = line.split('\t')
+                    parts = line.split("\t")
                     if len(parts) >= 2:
                         gene_id = parts[1].strip()
                         genes.append(gene_id)
@@ -74,7 +78,7 @@ async def get_pathway_proteins(pathway_id: str, organism: str = "hsa") -> List[D
             # Get gene information
             result = []
             for i in range(0, len(genes), 10):  # Process in batches of 10
-                batch = genes[i:i + 10]
+                batch = genes[i : i + 10]
                 genes_str = "+".join(batch)
                 info_url = f"{KEGG_API_BASE}/get/{genes_str}"
                 response = await client.get(info_url, timeout=30.0)
@@ -83,7 +87,7 @@ async def get_pathway_proteins(pathway_id: str, organism: str = "hsa") -> List[D
                 current_gene = None
                 gene_info = {}
 
-                for line in response.text.split('\n'):
+                for line in response.text.split("\n"):
                     if line.startswith("ENTRY"):
                         if current_gene and gene_info:
                             result.append(gene_info)

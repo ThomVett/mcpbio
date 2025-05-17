@@ -7,8 +7,7 @@ import kegg
 from keys import together_ai_api_key
 from prompts import kegg_prompt, Tool, kegg, go_terms, drug_bank
 
-client = OpenAI(api_key=together_ai_api_key,  base_url="https://api.together.xyz/v1")
-
+client = OpenAI(api_key=together_ai_api_key, base_url="https://api.together.xyz/v1")
 
 
 planing_prompt = f"""
@@ -58,7 +57,6 @@ Available tools:
 """
 
 
-
 empty_string = """
 
 
@@ -75,11 +73,11 @@ STEPS_ENRICHMENT = {
     "uniprot": "This reveals key information about the protein’s role and function.",
     "string": "This helps identify interacting proteins and broader functional networks.",
     "chembl": "This may uncover experimental compounds or drugs under development.",
-    "kegg": "This provides insight into the biological pathways the gene participates in."
+    "kegg": "This provides insight into the biological pathways the gene participates in.",
 }
 
-def explain_personalized_steps(plan_json):
 
+def explain_personalized_steps(plan_json):
     steps = plan_json.get("steps", [])
     if not steps:
         return "No steps were found in the planning output."
@@ -92,12 +90,12 @@ def explain_personalized_steps(plan_json):
 
         # Ensure both description and enrichment end with a period
         description = step.get("description", "").strip()
-        if not description.endswith('.'):
-            description += '.'
+        if not description.endswith("."):
+            description += "."
 
         extra = STEPS_ENRICHMENT.get(db, "")
-        if extra and not extra.endswith('.'):
-            extra += '.'
+        if extra and not extra.endswith("."):
+            extra += "."
 
         final_text = f"**Step {i} – Querying {db_name}**\n{description} {extra}".strip()
         readable_steps.append(final_text)
@@ -105,21 +103,19 @@ def explain_personalized_steps(plan_json):
     return "\n\n".join(readable_steps)
 
 
-
-
 def generate_bio_plan(user_query: str):
-
-    user_prompt = f"User query: \"{user_query}\""
+    user_prompt = f'User query: "{user_query}"'
 
     print(planing_prompt)
-    response = client.chat.completions.create(model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",  # Or llama-2-70b-chat, nous-hermes, etc.
-    messages=[
-        {"role": "system", "content": planing_prompt},
-        {"role": "user", "content": user_prompt}
-    ],
-    temperature=0.2,
-    max_tokens=1000)
-
+    response = client.chat.completions.create(
+        model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",  # Or llama-2-70b-chat, nous-hermes, etc.
+        messages=[
+            {"role": "system", "content": planing_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        temperature=0.2,
+        max_tokens=1000,
+    )
 
     output = response.choices[0].message.content
 
@@ -145,7 +141,9 @@ async def execute_bio_plan(plan):
                 pathway_name = params.get("pathway_name")
                 organism = params.get("organism", "hsa")
                 if not pathway_name:
-                    results.append({"error": "Missing 'pathway_name' for get_pathway_id"})
+                    results.append(
+                        {"error": "Missing 'pathway_name' for get_pathway_id"}
+                    )
                     continue
 
                 pathway_id, desc = await kegg.get_pathway_id(pathway_name, organism)
@@ -153,24 +151,25 @@ async def execute_bio_plan(plan):
                     results.append({"error": f"No pathway found for: {pathway_name}"})
                     continue
 
-                results.append({
-                    "pathway_id": pathway_id,
-                    "description": desc
-                })
+                results.append({"pathway_id": pathway_id, "description": desc})
 
             elif function == "get_pathway_proteins":
                 pathway_id = params.get("pathway_id")
                 organism = params.get("organism", "hsa")
                 if not pathway_id:
-                    results.append({"error": "Missing 'pathway_id' for get_pathway_proteins"})
+                    results.append(
+                        {"error": "Missing 'pathway_id' for get_pathway_proteins"}
+                    )
                     continue
 
                 proteins = await kegg.get_pathway_proteins(pathway_id, organism)
-                results.append({
-                    "pathway_id": pathway_id,
-                    "protein_count": len(proteins),
-                    "top_proteins": proteins[:5]  # optional
-                })
+                results.append(
+                    {
+                        "pathway_id": pathway_id,
+                        "protein_count": len(proteins),
+                        "top_proteins": proteins[:5],  # optional
+                    }
+                )
 
             else:
                 results.append({"error": f"Unknown KEGG function: {function}"})
@@ -178,8 +177,6 @@ async def execute_bio_plan(plan):
         # Add elif blocks for other APIs like UniProt, ClinVar, etc.
 
     return results
-
-
 
 
 async def main():
@@ -194,6 +191,6 @@ async def main():
     results = await execute_bio_plan(plan)
     print(json.dumps(results, indent=2))
 
+
 if __name__ == "__main__":
     asyncio.run(main())
-
