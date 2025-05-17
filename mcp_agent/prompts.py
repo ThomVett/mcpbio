@@ -30,7 +30,7 @@ class Tool(BaseModel):
     )
 
     output: Any = Field(
-      description="attribute to store the outputs of the previous step".
+        description="attribute to store the outputs of the previous step"
     )
 
     def tool_call(self):

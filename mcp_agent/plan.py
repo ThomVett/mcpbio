@@ -106,7 +106,6 @@ def explain_personalized_steps(plan_json):
 def generate_bio_plan(user_query: str):
     user_prompt = f'User query: "{user_query}"'
 
-    print(planing_prompt)
     response = client.chat.completions.create(
         model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",  # Or llama-2-70b-chat, nous-hermes, etc.
         messages=[
