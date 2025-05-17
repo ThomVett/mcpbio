@@ -28,7 +28,7 @@ from pydantic import BaseModel
 
 class GeneInfo(BaseModel):
     kegg_id: str
-    gene_symbol: str
+    #gene_symbol: str
     uniprot_id: str
 
 class PathwayProteinResponse(BaseModel):
@@ -147,9 +147,9 @@ def get_pathway_proteins(data: PathwayRequest) -> PathwayProteinResponse:
     protein_data = []
     print("🔍 Fetching gene symbols and UniProt IDs...")
     for kegg_id in gene_ids:
-        gene_symbol = get_gene_symbol(kegg_id)
+        #gene_symbol = get_gene_symbol(kegg_id)
         uniprot_id = kegg_to_uniprot.get(kegg_id.replace("hsa:", ""), "Unknown")
-        protein_data.append(GeneInfo(kegg_id=kegg_id, gene_symbol=gene_symbol, uniprot_id=uniprot_id))
+        protein_data.append(GeneInfo(kegg_id=kegg_id, uniprot_id=uniprot_id))
 
     return PathwayProteinResponse(
         pathway_name=data.pathway_name,
@@ -203,14 +203,14 @@ def check_uniprot_drug_links(uniprot_ids: List[str]) -> Dict[str, Dict]:
         }
 
     return results
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
 
-    # TEST: Change the pathway name here for each test
-    test_pathway = "N-glycan biosynthesis"
-    print("🔬 TESTING FUNCTION: get_pathway_proteins")
-    response, uniprot_ids = get_pathway_proteins(PathwayRequest(pathway_name=test_pathway))
-    print("✅ Response:", response)
-    print("✅ UniProt IDs:", uniprot_ids)
+    # # TEST: Change the pathway name here for each test
+    # test_pathway = "N-glycan biosynthesis"
+    # print("🔬 TESTING FUNCTION: get_pathway_proteins")
+    # response, uniprot_ids = get_pathway_proteins(PathwayRequest(pathway_name=test_pathway))
+    # print("✅ Response:", response)
+    # print("✅ UniProt IDs:", uniprot_ids)
    
-    print(check_uniprot_drug_links(uniprot_ids ))
+    # print(check_uniprot_drug_links(uniprot_ids ))
