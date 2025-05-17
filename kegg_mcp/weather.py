@@ -103,13 +103,16 @@ Forecast: {period["detailedForecast"]}
 
 
 @mcp.tool()
-async def kegg_pathway_proteins(pathway_name: str, organism: str = "hsa") -> str:
+async def kegg_pathway_proteins(pathway_name: str) -> str:
     """Get proteins in a biological pathway from KEGG.
     
     Args:
         pathway_name: Name of the pathway (e.g., apoptosis)
-        organism: KEGG organism code (default: hsa for human)
+        
     """
+
+    organism = "hsa"
+
     # First get the pathway ID
     pathway_id, pathway_desc = await kegg.get_pathway_id(pathway_name, organism)
     
