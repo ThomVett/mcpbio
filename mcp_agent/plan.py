@@ -5,7 +5,7 @@ import json
 
 import kegg
 from keys import together_ai_api_key
-from prompts import kegg_prompt
+from prompts import kegg_prompt, Tool, kegg
 
 client = OpenAI(api_key=together_ai_api_key,  base_url="https://api.together.xyz/v1")
 
@@ -21,7 +21,7 @@ You are given access to a set of bioinformatics APIs. Your job is to:
 
 Respond ONLY in JSON format like this:
 {{
-  "task": "short_task_label",
+  "task": "api_tool_used",
   "steps": [
     {{
       "action": "api_name",
@@ -33,6 +33,22 @@ Respond ONLY in JSON format like this:
     }}
   ]
 }}
+
+Tools:
+
+the fools will follow this schema:
+
+{json.dumps(Tool.model_json_schema())}
+
+Available tools:
+
+{json.dumps(kegg.model_dump_json())}
+
+"""
+
+
+
+empty_string = """
 
 
 Below are descriptions of available APIs:
@@ -160,6 +176,7 @@ async def main():
     plan = generate_bio_plan(example_query)
     print("--- PLAN ---")
     print(json.dumps(plan, indent=2))
+    exit()
     print("\n--- STEP DESCRIPTIONS ---")
     print(explain_personalized_steps(plan))
 

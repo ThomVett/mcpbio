@@ -1,3 +1,122 @@
+from typing import List
+from pydantic import BaseModel, Field
+
+class APIAccessMethod(BaseModel):
+    function_name: str = Field(
+        description="The name of the function to call"
+    )
+    description: str = Field(
+        description="A detailed description of what this method does"
+    )
+    return_value: str = Field(
+        description="Description of what is returned by this method"
+    )
+    example: str = Field(
+        description="Example input in JSON format"
+    )
+
+
+class Tool(BaseModel):
+    name: str = Field(
+        description="The name of the tool"
+    )
+    description: str = Field(
+        description="A comprehensive description of the tool's purpose and capabilities"
+    )
+    use_cases: List[str] = Field(
+        description="List of specific use cases where this tool is useful"
+    )
+    api_access_methods: List[APIAccessMethod] = Field(
+        description="Methods available to access this tool's API"
+    )
+
+
+kegg = Tool(
+    name="KEGG",
+    description="KEGG provides access to pathway and network information related to genes, proteins, and metabolites.",
+    use_cases=["Discover which pathways a gene is involved in", "Retrieve all proteins in a known pathway", "Analyze how mutations may impact cellular signaling"],
+    api_access_methods=[
+        APIAccessMethod(
+            function_name="get_pathway_proteins", 
+            description="Use when you have a pathway name and want to list all proteins in that pathway.", 
+            return_value="list of genes/proteins with IDs and names", 
+            example='{ "pathway_name": "apoptosis" }'
+        )
+    ]
+)
+
+
+# class UniProt(Tool):
+#     name = "UniProt"
+#     description = "UniProt provides detailed protein-level information including: Protein sequence and function, Domains and sites (e.g., active site, binding site), Gene and protein names, Post-translational modifications, Protein variants (natural or disease-associated)"
+#     use_cases = ["Finding the function of a gene or protein (e.g., TP53)", "Locating domains affected by mutations", "Checking involvement in biological processes or pathways"]
+#     api_access_methods = [
+#         APIAccessMethod(
+#             function_name="search_uniprot", 
+#             description="Search UniProt for information about a protein", 
+#             return_value="JSON with protein details",
+#             example='{ "query": "gene:TP53 AND organism_id:9606", "format": "json" }'
+#         )
+#     ]
+
+
+# class ClinVar(Tool):
+#     name = "ClinVar"
+#     description = "ClinVar provides information about genetic variation and its relationship to human health."
+#     use_cases = ["Finding the clinical significance of a genetic variant", "Locating variants associated with a specific condition", "Checking the frequency of a variant in a population"]
+#     api_access_methods = [
+#         APIAccessMethod(
+#             function_name="search_variant", 
+#             description="Search for information about a genetic variant", 
+#             return_value="Summary of clinical significance and related conditions",
+#             example='{ "variant_id": "rs12345" }'
+#         )
+#     ]
+
+
+# class DrugBank(Tool):
+#     name = "DrugBank"
+#     description = "DrugBank provides information on drug molecules, including approved and investigational compounds, their targets, mechanisms of action, and clinical indications."
+#     use_cases = ["Identify drugs that target a specific gene or protein", "Check if a gene is a known drug target", "Look up drugs in development or approved for a disease"]
+#     api_access_methods = [
+#         APIAccessMethod(
+#             function_name="search_drug", 
+#             description="Search for drugs by name, target, or indication", 
+#             return_value="Drug information including targets and indications",
+#             example='{ "target": "TP53" }'
+#         )
+#     ]
+
+
+# class ChEMBL(Tool):
+#     name = "ChEMBL"
+#     description = "ChEMBL is a database of bioactive drug-like molecules that includes information on their bioactivities, targets, and properties."
+#     use_cases = ["Identify compounds with potent activity against a protein", "Explore drug candidates not yet approved", "Analyze IC50/Ki data for known ligands"]
+#     api_access_methods = [
+#         APIAccessMethod(
+#             function_name="search_target", 
+#             description="Search for a target in ChEMBL", 
+#             return_value="Target information and related bioactivities",
+#             example='{ "query": "TP53" }'
+#         )
+#     ]
+
+
+# class STRING(Tool):
+#     name = "STRING"
+#     description = "STRING is a protein–protein interaction database that integrates known and predicted associations from multiple sources."
+#     use_cases = ["Identify interaction partners of a gene/protein", "Explore functional protein networks", "Infer indirect effects of gene mutations"]
+#     api_access_methods = [
+#         APIAccessMethod(
+#             function_name="get_interactions", 
+#             description="Get interaction partners for a protein", 
+#             return_value="Network of protein interactions with confidence scores",
+#             example='{ "identifiers": "TP53", "species": 9606 }'
+#         )
+#     ]
+
+
+# Individual tool prompts
 kegg_prompt = """
 API TOOL: KEGG
 
@@ -10,17 +129,15 @@ RELEVANT USE CASES:
 - Analyze how mutations may impact cellular signaling
 
 API ACCESS METHODS:
-1. `get_pathway_proteins(pathway_id: str)`
-   - Use when you have a KEGG **pathway ID** and want to list all proteins in that pathway.
+1. `get_pathway_proteins(pathway_name: str)`
+   - Use when you have a pathway name and want to list all proteins in that pathway.
    - Returns: list of genes/proteins with IDs and names
-   - Example: `{ "pathway_id": "hsa04210" }`
+   - Example: `{ "pathway_name": "apoptosis" }`
 
 NOTE:
 - Always use organism code `"hsa"` for human.
 - Chain these calls when needed: first retrieve the `pathway_id`, then get the proteins.
 """
-
-
 
 uniprot_prompt = """
 API TOOL: UniProt
