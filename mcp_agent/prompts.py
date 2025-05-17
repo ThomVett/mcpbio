@@ -30,8 +30,16 @@ class Tool(BaseModel):
         description="Methods available to access this tool's API"
     )
 
+    def tool_call(self):
+      pass
 
-kegg = Tool(
+
+class KEGGTool(Tool):
+    def tool_call(self):
+        pass
+
+
+kegg = KEGGTool(
     name="KEGG",
     description="KEGG provides access to pathway and network information related to genes, proteins, and metabolites.",
     use_cases=["Discover which pathways a gene is involved in", "Retrieve all proteins in a known pathway", "Analyze how mutations may impact cellular signaling"],
@@ -44,7 +52,6 @@ kegg = Tool(
         )
     ]
 )
-
 
 go_terms = Tool(
    name="GO",

@@ -187,13 +187,12 @@ async def main():
     plan = generate_bio_plan(example_query)
     print("--- PLAN ---")
     print(json.dumps(plan, indent=2))
-    exit()
     print("\n--- STEP DESCRIPTIONS ---")
     print(explain_personalized_steps(plan))
 
     print("\n--- EXECUTING PLAN ---")
-    # results = await execute_bio_plan(plan)
-    # print(json.dumps(results, indent=2))
+    results = await execute_bio_plan(plan)
+    print(json.dumps(results, indent=2))
 
 if __name__ == "__main__":
     asyncio.run(main())
