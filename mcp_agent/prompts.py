@@ -46,6 +46,35 @@ kegg = Tool(
 )
 
 
+go_terms = Tool(
+   name="GO",
+   description="GO is the gene ontology database and provides general information about genes",
+   use_cases=["Find genes with functional similarity to one another"],
+   api_access_methods=[
+      APIAccessMethod(
+         function_name="get_similar_genes",
+         description="find all the genes that are similar to the inut genes",
+         return_value="List of similar genes",
+         example='{"gene_name": "TP53"}',
+      )
+   ]
+)
+
+drug_bank = Tool(
+    name="DrugBank",
+    description="DrugBank provides information on drug molecules, including approved and investigational compounds, their targets, mechanisms of action, and clinical indications.",
+    use_cases=["Identify drugs that target a specific gene or protein", "Check if a gene is a known drug target", "Look up drugs in development or approved for a disease"],
+    api_access_methods=[
+        APIAccessMethod(
+            function_name="search_drug", 
+            description="Search for drugs by name, target, or indication", 
+            return_value="Drug information including targets and indications",
+            example='{ "target": "TP53" }'
+        )
+    ]
+)
+
+
 # class UniProt(Tool):
 #     name = "UniProt"
 #     description = "UniProt provides detailed protein-level information including: Protein sequence and function, Domains and sites (e.g., active site, binding site), Gene and protein names, Post-translational modifications, Protein variants (natural or disease-associated)"
@@ -70,20 +99,6 @@ kegg = Tool(
 #             description="Search for information about a genetic variant", 
 #             return_value="Summary of clinical significance and related conditions",
 #             example='{ "variant_id": "rs12345" }'
-#         )
-#     ]
-
-
-# class DrugBank(Tool):
-#     name = "DrugBank"
-#     description = "DrugBank provides information on drug molecules, including approved and investigational compounds, their targets, mechanisms of action, and clinical indications."
-#     use_cases = ["Identify drugs that target a specific gene or protein", "Check if a gene is a known drug target", "Look up drugs in development or approved for a disease"]
-#     api_access_methods = [
-#         APIAccessMethod(
-#             function_name="search_drug", 
-#             description="Search for drugs by name, target, or indication", 
-#             return_value="Drug information including targets and indications",
-#             example='{ "target": "TP53" }'
 #         )
 #     ]
 

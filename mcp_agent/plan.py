@@ -5,26 +5,32 @@ import json
 
 import kegg
 from keys import together_ai_api_key
-from prompts import kegg_prompt, Tool, kegg
+from prompts import kegg_prompt, Tool, kegg, go_terms, drug_bank
 
 client = OpenAI(api_key=together_ai_api_key,  base_url="https://api.together.xyz/v1")
 
 
 
 planing_prompt = f"""
-You are a biomedical API planner.
+You are a biomedical tool planner.
 
-You are given access to a set of bioinformatics APIs. Your job is to:
+You are given access to a set of bioinformatics Tools. Your job is to:
 - Understand the user's question
 - Decide which APIs are needed to answer it
 - Output a structured JSON plan detailing which API to use, in which order, and what parameters
 
+The tools are defined the following way:
+
+{json.dumps(Tool.model_json_schema())}
+
 Respond ONLY in JSON format like this:
+
+- make sure to 
 {{
-  "task": "api_tool_used",
   "steps": [
     {{
-      "action": "api_name",
+      "tool_name": "tool_name_selected - Tool.name",
+      "action": "api_name" (this follows the name defined in APIAccessMethod.function_name) that the Tool has access to),
       "description": "What this step does (in plain English).",
       "params": {{
         "function": "api_function_name_if_applicable",
@@ -34,15 +40,20 @@ Respond ONLY in JSON format like this:
   ]
 }}
 
-Tools:
-
-the fools will follow this schema:
-
-{json.dumps(Tool.model_json_schema())}
-
 Available tools:
 
+
+--- 
+
 {json.dumps(kegg.model_dump_json())}
+
+---
+
+{json.dumps(go_terms.model_dump_json())}
+
+---
+
+{json.dumps(drug_bank.model_dump_json())}
 
 """
 
