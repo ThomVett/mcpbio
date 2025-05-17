@@ -1,5 +1,5 @@
 import asyncio
-from weather import get_alerts, get_forecast, kegg_pathway_proteins
+from kegg_mcp.functional_mcp import get_alerts, get_forecast, kegg_pathway_proteins
 import kegg
 
 async def test_kegg_pathway_tool():
