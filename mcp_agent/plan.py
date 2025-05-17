@@ -59,6 +59,7 @@ Available tools:
 
 empty_string = """
 
+in the first pipeline there are only two steps.
 
 Below are descriptions of available APIs:
 
@@ -119,8 +120,12 @@ def generate_bio_plan(user_query: str):
     output = response.choices[0].message.content
 
     try:
+        # Attempt to find the start of the JSON object
         json_start = output.find("{")
-        return json.loads(output[json_start:])
+        # Clean up the output by removing any leading or trailing non-JSON content
+        cleaned_output = output[json_start:].strip()
+        # Attempt to parse the cleaned output as JSON
+        return json.loads(cleaned_output)
     except Exception as e:
         print("Failed to parse JSON response:", e)
         print("LLM raw output:", output)
