@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 import kegg
+import go
 
 # Initialize FastMCP server
 mcp = FastMCP("weather")
@@ -108,7 +109,7 @@ async def kegg_pathway_proteins(pathway_name: str) -> str:
     
     Args:
         pathway_name: Name of the pathway (e.g., apoptosis)
-        
+
     """
 
     organism = "hsa"
@@ -141,6 +142,21 @@ async def kegg_pathway_proteins(pathway_name: str) -> str:
     
     return result
 
+
+@mcp.tool()
+async def go_functional_similarity(gene_name: str) -> List[str]:
+    """Gets a list of genes that are similar to gene name according to their gene ontology
+
+    Args:
+        gene_name: Gene name to query the functional similarity
+
+    Returns:
+        List of genes
+    """
+
+    return go.find_similar_genes(gene_name)
+
+    
 
 if __name__ == "__main__":
     mcp.run(transport='stdio')

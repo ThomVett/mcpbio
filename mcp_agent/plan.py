@@ -140,6 +140,9 @@ async def execute_bio_plan(plan):
         params = step.get("params", {})
         function = params.get("function", "").lower()
 
+        print("---------------------- first action -----------")
+        print(action, params, function)
+
         if action == "kegg":
             if function == "get_pathway_id":
                 pathway_name = params.get("pathway_name")
